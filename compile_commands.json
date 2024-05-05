@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/home/gerben/uni/dev/asm6502-cpp/build",
+  "command": "/usr/bin/c++  -I/home/gerben/uni/dev/asm6502-cpp/include -std=gnu++17 -o CMakeFiles/asm6502.dir/src/main.cpp.o -c /home/gerben/uni/dev/asm6502-cpp/src/main.cpp",
+  "file": "/home/gerben/uni/dev/asm6502-cpp/src/main.cpp"
+},
+{
+  "directory": "/home/gerben/uni/dev/asm6502-cpp/build",
+  "command": "/usr/bin/c++  -I/home/gerben/uni/dev/asm6502-cpp/include -std=gnu++17 -o CMakeFiles/asm6502.dir/src/lexer/lexer.cpp.o -c /home/gerben/uni/dev/asm6502-cpp/src/lexer/lexer.cpp",
+  "file": "/home/gerben/uni/dev/asm6502-cpp/src/lexer/lexer.cpp"
+},
+{
+  "directory": "/home/gerben/uni/dev/asm6502-cpp/build",
+  "command": "/usr/bin/c++  -I/home/gerben/uni/dev/asm6502-cpp/include -std=gnu++17 -o CMakeFiles/asm6502.dir/src/lexer/tokens.cpp.o -c /home/gerben/uni/dev/asm6502-cpp/src/lexer/tokens.cpp",
+  "file": "/home/gerben/uni/dev/asm6502-cpp/src/lexer/tokens.cpp"
+}
+]
