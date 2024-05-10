@@ -1,33 +1,34 @@
-#ifndef TOKENS_HPP
-#define TOKENS_HPP
+#ifndef _TOKENS_HPP
+#define _TOKENS_HPP
 
 #include <string>
+#include <variant>
+#include <vector>
 
-enum TokenKind {
-    EOFT, // EOFT for EOF Token
-    DecimalNumber,
-    HexNumber,
-    BinaryNumber,
-    Identifier,
-    Label,
+enum class TokenKind {
+    eof, 
     Assignment,
     Semicolon, 
     Colon,
     Comma,
-    Dollar, // Denotes Hex numbers
-    Percent, // Denotes Binary numbers
+    Illegal,
 
-    // Operations
-    Plus,
-    Dash,
-    Star,
+    DecimalNumber,
+    Dollar, // Denotes Hex numbers
+    HexNumber,
+    Percent, // Denotes Binary numbers
+    BinaryNumber,
+    Identifier,
+
+    // Binary Operations
+    Plus, Dash, Star,
 
     // Grouping Tokens
     OpenParan, CloseParan,
 
     // These are reserved because X and Y are the index registers
     X, Y,
-    // Reserved Keywords (Opcodes, X and Y)
+    // Reserved Keywords (Opcodes)
     ADC, AND, ASL, BCC, BCS, BEQ, BIT,
     BMI, BNE, BPL, BRK, BVC, BVS, CLC,
     CLD, CLI, CLV, CMP, CPX, CPY, DEC,
@@ -38,18 +39,28 @@ enum TokenKind {
     STY, TAX, TAY, TSX, TXA, TXS, TYA,
 };
 
-struct Token {
+struct Token final {
     TokenKind kind;
-    std::string value;
+    std::variant<std::string, char> value;
+
+    // Constructors
+    Token();
+    Token(const TokenKind kind, std::variant<std::string, char> value);
+
+    // Check if a token is one of many in a list
+    bool is_one_of_many(std::vector<TokenKind> token_kinds) const;
+
+    // Print information on the current token
+    void debug() const;
+    std::string get_value() const;
+    TokenKind get_kind() const;
+
+    // Operators
+    bool operator==(Token rhs);
+
+    bool operator!=(Token rhs);
 };
 
-std::string debug(TokenKind kind); {
-    std::string token_string;
-    switch (kind) {
-        case TokenKind::EOFT: { token_string = "EOF"; }
-        case TokenKind::X: { token_string = "X"; }
-    
-    }
-    return token_string;
-}
+std::string token_string(TokenKind kind);
+
 #endif
