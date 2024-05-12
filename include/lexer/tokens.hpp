@@ -23,6 +23,9 @@ enum class TokenKind {
     // Binary Operations
     Plus, Dash, Star,
 
+    // Unary Operation
+    Pound,
+
     // Grouping Tokens
     OpenParan, CloseParan,
 
@@ -50,10 +53,15 @@ struct Token final {
     // Check if a token is one of many in a list
     bool is_one_of_many(std::vector<TokenKind> token_kinds) const;
 
+    bool is_keyword() const;
+
     // Print information on the current token
     void debug() const;
-    std::string get_value() const;
+
+    // Getters and setter
     TokenKind get_kind() const;
+
+    void set_keyword_kind(std::variant<std::string, char> val);
 
     // Operators
     bool operator==(Token rhs);
@@ -62,5 +70,7 @@ struct Token final {
 };
 
 std::string token_string(TokenKind kind);
+
+TokenKind keyword_kind(std::string keyword);
 
 #endif

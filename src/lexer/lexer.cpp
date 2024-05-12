@@ -1,5 +1,10 @@
+#include <algorithm>
 #include <exception>
 #include <cctype>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <iostream>
 
 #include "lexer/lexer.hpp"
 #include "lexer/tokens.hpp"
@@ -10,7 +15,7 @@ Lexer::Lexer(std::string input) {
     if (input.empty()) {
         throw std::exception();
     }
-    this->input = input;
+    this->input = strip_comments(input);
     this->ch = input[0];
     this->position = 0;
     this->read_position = 1;
@@ -36,6 +41,18 @@ void Lexer::skip_whitespace() noexcept {
         this->read_char();
     }
 }
+
+std::vector<std::string> split_string(const std::string input) {
+    std::vector<std::string> string;
+    const char delimiter = '\n';
+    std::stringstream ss = std::stringstream(input);
+
+    for (std::string line; std::getline(ss, line, delimiter);) {
+        string.push_back(line);
+    }
+    return string;
+}
+
 
 std::string Lexer::read_hex() {
     std::string str = "";
@@ -73,6 +90,43 @@ std::string Lexer::read_literal() {
     return str;
 }
 
+
+std::string read_input_file(std::string file_path) {
+    std::ifstream read_file;
+    read_file.open("../" + file_path);
+
+    if (!(read_file.is_open())) {
+        throw std::exception();
+    }
+
+    std::string line;
+    std::string file_content;
+    while (getline(read_file, line)) {
+        file_content += line + '\n';
+    }
+
+    read_file.close();
+
+    return file_content;
+}
+
+std::string strip_comments(const std::string input) {
+    std::vector<std::string> strings = split_string(input);
+    std::string output = "";
+
+    for (auto itr: strings) {
+        size_t pos = itr.find(";");
+        if (pos == itr.npos) {
+            // Not found, add the entire string
+            output += itr + "\n";
+        } else {
+            output += itr.substr(0, pos) + "\n";
+        }
+    }
+    return output;
+}
+
+
 Token Lexer::next_token() {
     Token token;
 
@@ -86,8 +140,15 @@ Token Lexer::next_token() {
         token.value = this->read_dec();
         return token;
     } else if (isalpha(this->ch)) {
-        token.kind = TokenKind::Identifier;
+        // Get the value
         token.value = this->read_literal();
+
+        // Check if it's a keyword, otherwise it's an identifier
+        if (token.is_keyword()) {
+            token.set_keyword_kind(token.value);
+        } else {
+            token.kind = TokenKind::Identifier;
+        }
         return token;
     }
 
@@ -139,6 +200,11 @@ Token Lexer::next_token() {
         }
         case '*': {
             token.kind = TokenKind::Star;
+            token.value = this->ch;
+            break;
+        }
+        case '#': {
+            token.kind = TokenKind::Pound;
             token.value = this->ch;
             break;
         }

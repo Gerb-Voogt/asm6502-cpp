@@ -31,24 +31,47 @@ void test_lexer_simple() {
         Token tok = l.next_token();
         tok.debug();
 
+        auto print_variant = [](const auto& var) {
+            std::cout << var;
+        };
+
         if (tok != expected) {
-            std::cout << "Something went wrong! " <<
-                tok.get_value() << " is not the same as " << expected.get_value() << std::endl;
+            std::cout << "Something went wrong! ";
+            std::visit(print_variant, tok.value);
+            std::cout << " is not the same as ";
+            std::visit(print_variant, expected.value);
+            std::cout << std::endl;
         }
     }
 }
 
-int main() {
-    std::vector<Token> tokens = {
-        Token(TokenKind::BinaryNumber, "0b0100101"),
-        Token(TokenKind::HexNumber, "0x00FF"),
-        Token(TokenKind::DecimalNumber, "20"),
-        Token(TokenKind::Colon, ':'),
-    };
+void test_reading_input_file() {
+    std::string file_path = "test_files/test.asm";
 
-    for (auto tok: tokens) {
+    std::string input = read_input_file(file_path);
+    std::string input_stripped = strip_comments(input);
+
+    std::vector<std::string> strings = split_string(input);
+
+    for (auto itr: strings) {
+    }
+}
+
+void test_lexing_input_file() {
+    std::string file_path = "test_files/test.asm";
+    std::string input = strip_comments(read_input_file(file_path));
+
+    Lexer l = Lexer(input);
+    Token tok;
+    while (tok.kind != TokenKind::eof) {
+        tok = l.next_token();
         tok.debug();
     }
 
-    test_lexer_simple();
+}
+
+int main() {
+    // test_lexer_simple();
+    // test_reading_input_file();
+    test_lexing_input_file();
 }
