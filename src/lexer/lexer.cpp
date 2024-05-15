@@ -1,10 +1,8 @@
-#include <algorithm>
 #include <exception>
 #include <cctype>
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <iostream>
 
 #include "lexer/lexer.hpp"
 #include "lexer/tokens.hpp"
@@ -144,7 +142,7 @@ Token Lexer::next_token() {
         token.value = this->read_literal();
 
         // Check if it's a keyword, otherwise it's an identifier
-        if (token.is_keyword()) {
+        if (token.is_opcode()) {
             token.set_keyword_kind(token.value);
         } else {
             token.kind = TokenKind::Identifier;

@@ -51,7 +51,7 @@ bool Token::is_one_of_many(std::vector<TokenKind> token_kinds) const {
 }
 
 
-bool Token::is_keyword() const {
+bool Token::is_opcode() const {
     // Create an array containing the opcodes
     // use std::find to check if it is contained in the array or not
     std::array<std::string, 56> keywords = {
@@ -74,7 +74,7 @@ bool Token::is_keyword() const {
 
 
 void Token::set_keyword_kind(std::variant<std::string, char> val) {
-    if (this->is_keyword()) {
+    if (this->is_opcode()) {
         this->kind = keyword_kind(std::get<std::string>(this->value));
     } 
 }

@@ -53,7 +53,7 @@ struct Token final {
     // Check if a token is one of many in a list
     bool is_one_of_many(std::vector<TokenKind> token_kinds) const;
 
-    bool is_keyword() const;
+    bool is_opcode() const;
 
     // Print information on the current token
     void debug() const;
